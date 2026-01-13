@@ -5,14 +5,15 @@ echo "==> Stopping and removing Pi-hole container..."
 docker rm -f pihole 2>/dev/null || true
 
 echo "==> Unloading LaunchDaemons..."
+sudo launchctl unload /Library/LaunchDaemons/com.pihole.startup.plist 2>/dev/null || true
 sudo launchctl unload /Library/LaunchDaemons/com.pihole.dns.plist 2>/dev/null || true
 sudo launchctl unload /Library/LaunchDaemons/com.pihole.forward.plist 2>/dev/null || true
-launchctl unload ~/Library/LaunchAgents/com.colima.start.plist 2>/dev/null || true
 
-echo "==> Removing LaunchDaemons and LaunchAgents..."
+echo "==> Removing LaunchDaemons and startup script..."
+sudo rm -f /Library/LaunchDaemons/com.pihole.startup.plist
 sudo rm -f /Library/LaunchDaemons/com.pihole.dns.plist
 sudo rm -f /Library/LaunchDaemons/com.pihole.forward.plist
-rm -f ~/Library/LaunchAgents/com.colima.start.plist
+sudo rm -f /usr/local/bin/pihole-startup.sh
 
 echo "==> Stopping Colima..."
 colima stop 2>/dev/null || true
